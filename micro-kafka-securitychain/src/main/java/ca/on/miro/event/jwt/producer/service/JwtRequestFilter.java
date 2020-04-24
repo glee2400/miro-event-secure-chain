@@ -32,7 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter
      * If it get JTW, then save it in the security context
      * 
      */
-    //@Override
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
@@ -41,15 +41,10 @@ public class JwtRequestFilter extends OncePerRequestFilter
         String username = null;
         String jwt = null;
 
-        System.out.println("1. Hit My Filter, authorizationHeader->"+authorizationHeader);
-        
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
         } 
-
-        System.out.println("2. Hit My Filter, user->"+username 
-        		+"  Context->getAuthentication()->"+SecurityContextHolder.getContext().getAuthentication() );
         
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -57,9 +52,6 @@ public class JwtRequestFilter extends OncePerRequestFilter
 
             // Check the JWT token
             if (jwtUtil.validateToken(jwt, userDetails)) {
-
-            	System.out.println("2.5 Passed the token validation...!");
-            	
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
@@ -67,8 +59,6 @@ public class JwtRequestFilter extends OncePerRequestFilter
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
-        
-        System.out.println("3. Hit My Filter, Chained...!");
         
         chain.doFilter(request, response);
     }

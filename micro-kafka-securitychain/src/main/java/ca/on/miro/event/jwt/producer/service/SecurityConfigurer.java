@@ -24,20 +24,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-		System.out.println("==>>00. Hit Configured -->Authentication!"+auth);
 		auth.userDetailsService(myUserDetailsService);
-		
-		/*
-		  auth.inMemoryAuthentication()
-			.withUser("demo")
-			.password("demo")
-			.roles("ADMIN")
-			.and()
-			.withUser("foo")
-			.password("foo")
-			.roles("USER")
-			;
-			*/
 	}
 	
 	
@@ -45,18 +32,15 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	/*
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		System.out.println("==>>01. Hit Configured -->Authorization!");
 		
 		httpSecurity.csrf().disable();
 		httpSecurity.authorizeRequests().anyRequest().fullyAuthenticated().and().httpBasic();
 			            
-		System.out.println("==>>02. Hit Configured -->Authorization!");
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
 	}
 	*/
 	
-	// --Remove Authorization and Filter -- JWT version
+	// Inject JWT security filter
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable()
@@ -66,18 +50,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 						.exceptionHandling()
 						.and().sessionManagement()
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
-		System.out.println("== >>Hit Configured, add my filter before the default!");
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-
 	}
 	
 	
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
-		System.out.println("==>>-01. Hit authenticationManagerBean !");
-
 		return super.authenticationManagerBean();
 	}
 	

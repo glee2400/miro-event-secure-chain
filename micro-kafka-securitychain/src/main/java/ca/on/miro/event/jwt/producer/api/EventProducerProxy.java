@@ -50,9 +50,7 @@ public class EventProducerProxy {
 	@PostMapping("/publish")
 	public CaseData publishEvent(@RequestBody CaseData casedata, @RequestHeader HttpHeaders headers){
 		
-		String jwtBearer = headers.getFirst("Authorization");
-		System.out.println("  --> Kafka Payload Header:"+jwtBearer);
-        
+		String jwtBearer = headers.getFirst("Authorization");        
         CasePayload casePayload = new CasePayload(jwtBearer==null?"jwt_Null":jwtBearer, casedata);
 		
 		output.send(MessageBuilder.withPayload(casePayload).build());
@@ -62,8 +60,6 @@ public class EventProducerProxy {
 	
 	@RequestMapping ({ "/hello" })
 	public String hello(@RequestHeader MultiValueMap<String, String> headers) {
-		
-		System.out.println("  --> hello: Hit me!");
 		headers.forEach((key, value) -> {
 			System.out.println(String.format("      Header '%s' = %s", key, value));
 		 });
@@ -98,8 +94,6 @@ public class EventProducerProxy {
 		/* Create authentication HTTP response with Token */
 		return ResponseEntity.ok(new AuthenticationResponse(jwt));
 	}
-	
-	
-	
+
 	
 }

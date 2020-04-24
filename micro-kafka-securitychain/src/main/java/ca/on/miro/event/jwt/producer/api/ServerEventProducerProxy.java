@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.on.miro.event.jwt.producer.model.CaseData;
 import ca.on.miro.event.jwt.producer.model.CasePayload;
 
-
+/**
+ * Deprecated this class since it uses Apache-kafka methods not Spring Cloud Stream binder framework
+ *
+ */
+@Deprecated
 @RestController
 @RequestMapping("kafka")
 public class ServerEventProducerProxy {
